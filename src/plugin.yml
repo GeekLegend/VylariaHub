@@ -1,0 +1,7 @@
+name: VylariaHub
+version: 1.0
+author: GeekLegend
+main: fr.geeklegend.vylaria.hub.VylariaHub
+depends: [VylariaAPI]
+commands:
+  lootbox:
