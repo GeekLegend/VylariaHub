@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="[Vylaria] Hub">
+    <output-path>$PROJECT_DIR$/../out</output-path>
+    <root id="archive" name="[Vylaria] Hub.jar">
+      <element id="module-output" name="VylariaHub" />
+    </root>
+  </artifact>
+</component>
