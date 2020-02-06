@@ -4,6 +4,7 @@ import fr.vylaria.api.data.mongo.MongoConnection;
 import fr.vylaria.api.data.mongo.MongoCredentials;
 import fr.vylaria.api.player.account.MongoAccount;
 import fr.vylaria.api.player.settings.MongoSetting;
+import fr.vylaria.api.server.MongoServer;
 import fr.vylaria.hub.commands.manager.CommandManager;
 import fr.vylaria.hub.inventories.manager.InventoryManager;
 import fr.vylaria.hub.listeners.manager.ListenerManager;
@@ -11,8 +12,10 @@ import fr.vylaria.hub.manager.HubManager;
 import fr.vylaria.hub.scoreboard.Scoreboard;
 import fr.vylaria.hub.scoreboard.ScoreboardManager;
 import fr.vylaria.hub.world.WorldManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.rmi.ServerError;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -35,6 +38,7 @@ public class VylariaHub extends JavaPlugin
 
     private MongoAccount mongoAccount;
     private MongoSetting mongoSetting;
+    private MongoServer mongoServer;
 
     private Scoreboard scoreboard;
 
@@ -48,6 +52,7 @@ public class VylariaHub extends JavaPlugin
 
         mongoAccount = new MongoAccount();
         mongoSetting = new MongoSetting();
+        mongoServer = new MongoServer();
 
         executorMonoThread = Executors.newScheduledThreadPool(16);
         scheduledExecutorService = Executors.newScheduledThreadPool(1);
@@ -66,6 +71,7 @@ public class VylariaHub extends JavaPlugin
 
         scoreboard = new Scoreboard();
         scoreboard.register();
+
     }
 
     @Override
@@ -131,4 +137,7 @@ public class VylariaHub extends JavaPlugin
         return worldManager;
     }
 
+    public MongoServer getMongoServer() {
+        return mongoServer;
+    }
 }

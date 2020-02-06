@@ -1,5 +1,6 @@
 package fr.vylaria.hub.scoreboard;
 
+import fr.vylaria.api.VylariaAPI;
 import fr.vylaria.hub.VylariaHub;
 import fr.vylaria.api.player.account.Account;
 import fr.vylaria.api.player.account.Rank;
@@ -37,14 +38,12 @@ public class PersonalScoreboard
 	public void setLines(String ip)
 	{
 		MongoAccount mongoAccount = VylariaHub.getInstance().getMongoAccount();
-		/*RedisServer redisServer = VylariaHub.getInstance().getRedisServer();
-		Server networkServer = redisServer.get("Network");*/
 		Account account = mongoAccount.get(player.getUniqueId());
 		Rank rank = account.getRank();
 		double tokens = account.getTokens();
 		double eurs = account.getEurs();
-		String hub = VylariaHub.getInstance().getServer().getMotd();
-		//int online = networkServer.getOnline();
+		String hub = VylariaAPI.getInstance().getVServer().getServerName();
+		int online = VylariaAPI.getInstance().getNetwork().getPlayerCount();
 
 		objectiveSign.setDisplayName("§e§lVYLARIA");
 		objectiveSign.setLine(0, "§1§6 ");
@@ -58,7 +57,7 @@ public class PersonalScoreboard
 		objectiveSign.setLine(8, "§1§1 ");
 		objectiveSign.setLine(9, "§6§lServeur");
 		objectiveSign.setLine(10, " §7Hub: §c" + hub);
-		objectiveSign.setLine(11, " §7Joueurs: §e"/* + online*/);
+		objectiveSign.setLine(11, " §7Joueurs: §e" + online);
 		objectiveSign.setLine(12, "§1§4 ");
 		objectiveSign.setLine(13, ip);
 		objectiveSign.updateLines();

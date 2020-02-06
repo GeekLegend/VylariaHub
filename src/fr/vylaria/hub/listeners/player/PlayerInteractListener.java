@@ -1,6 +1,7 @@
 package fr.vylaria.hub.listeners.player;
 
 import fr.vylaria.hub.VylariaHub;
+import fr.vylaria.hub.inventories.HubListInventory;
 import fr.vylaria.hub.lootbox.Lootbox;
 import fr.vylaria.hub.lootbox.LootboxScheduler;
 import fr.vylaria.hub.inventories.MenuInventory;
@@ -39,6 +40,8 @@ public class PlayerInteractListener implements Listener
                 } else if (item.getType() == Material.GOLD_INGOT && item.getItemMeta().getDisplayName().equalsIgnoreCase("§6Boutique §7§o(Clic droit)"))
                 {
                     player.openInventory(new ShopInventory().create(player));
+                }else if(item.getType() == Material.WOOL && item.getItemMeta().getDisplayName().equalsIgnoreCase("§aHubs §7§o(Clic droit)")){
+                    player.openInventory(new HubListInventory().create(player));
                 }
             }
         }

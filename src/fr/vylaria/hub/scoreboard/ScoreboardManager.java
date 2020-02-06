@@ -32,7 +32,7 @@ public class ScoreboardManager
                 {
                     scoreboard.setLines(ip);
                 });
-        }, 80, 80, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
 
         reloadingTask = VylariaHub.getInstance().getScheduledExecutorService().scheduleAtFixedRate(() ->
         {

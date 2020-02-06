@@ -18,6 +18,7 @@ public class InventoryManager implements IManager
     private UHCRunTypeInventory uhcRunTypeInventory;
     private RTFInventory rtfInventory;
     private LootboxInventory lootboxInventory;
+    private HubListInventory hubListInventory;
 
     public InventoryManager(VylariaHub instance)
     {
@@ -30,6 +31,7 @@ public class InventoryManager implements IManager
         this.uhcRunTypeInventory = new UHCRunTypeInventory();
         this.rtfInventory = new RTFInventory();
         this.lootboxInventory = new LootboxInventory();
+        this.hubListInventory = new HubListInventory();
     }
 
     @Override
@@ -44,6 +46,7 @@ public class InventoryManager implements IManager
         pluginManager.registerEvents(uhcRunInventory, instance);
         pluginManager.registerEvents(rtfInventory, instance);
         pluginManager.registerEvents(lootboxInventory, instance);
+        pluginManager.registerEvents(hubListInventory, instance);
     }
 
     public MenuInventory getMenuInventory()
@@ -84,5 +87,10 @@ public class InventoryManager implements IManager
     public LootboxInventory getLootboxInventory()
     {
         return lootboxInventory;
+    }
+
+    public HubListInventory getHubListInventory()
+    {
+        return hubListInventory;
     }
 }

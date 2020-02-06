@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="JARs">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../out/[Vylaria] API.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../out/API.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

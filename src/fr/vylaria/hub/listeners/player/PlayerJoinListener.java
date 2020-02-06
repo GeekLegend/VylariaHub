@@ -88,6 +88,7 @@ public class PlayerJoinListener implements Listener
         player.getInventory().clear();
         player.getInventory().setItem(0, new ItemBuilder(Material.COMPASS).setName("§6Menu principal §7§o(Clic droit)").toItemStack());
         player.getInventory().setItem(1, new ItemBuilder(Material.SKULL_ITEM).setDurability((byte) 3).setSkullOwner(player.getName()).setName("§6Mon profil §7§o(Clic droit)").toItemStack());
-        player.getInventory().setItem(8, new ItemBuilder(Material.GOLD_INGOT).setName("§6Boutique §7§o(Clic droit)").toItemStack());
+        player.getInventory().setItem(7, new ItemBuilder(Material.GOLD_INGOT).setName("§6Boutique §7§o(Clic droit)").toItemStack());
+        player.getInventory().setItem(8, new ItemBuilder(Material.WOOL).setName("§aHubs §7§o(Clic droit)").toItemStack());
     }
 }
