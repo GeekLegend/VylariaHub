@@ -25,7 +25,7 @@ public class PlayerQuitListener implements Listener
             suffix = Constants.HOST_SUFFIX;
         }
 
-        VylariaHub.getInstance().getScoreboardManager().onLogout(player);
+        VylariaHub.getInstance().getHubScoreboard().onLeave(player);
 
         if (!rank.equals(Rank.PLAYER))
         {

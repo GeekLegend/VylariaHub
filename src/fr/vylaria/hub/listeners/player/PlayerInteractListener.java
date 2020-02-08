@@ -40,7 +40,7 @@ public class PlayerInteractListener implements Listener
                 } else if (item.getType() == Material.GOLD_INGOT && item.getItemMeta().getDisplayName().equalsIgnoreCase("§6Boutique §7§o(Clic droit)"))
                 {
                     player.openInventory(new ShopInventory().create(player));
-                }else if(item.getType() == Material.WOOL && item.getItemMeta().getDisplayName().equalsIgnoreCase("§aHubs §7§o(Clic droit)")){
+                }else if(item.getType() == Material.NETHER_STAR && item.getItemMeta().getDisplayName().equalsIgnoreCase("§6Hubs §7§o(Clic droit)")){
                     player.openInventory(new HubListInventory().create(player));
                 }
             }

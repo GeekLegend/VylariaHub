@@ -1,21 +1,24 @@
 package fr.vylaria.hub;
 
+import fr.vylaria.api.VylariaAPI;
 import fr.vylaria.api.data.mongo.MongoConnection;
 import fr.vylaria.api.data.mongo.MongoCredentials;
 import fr.vylaria.api.player.account.MongoAccount;
 import fr.vylaria.api.player.settings.MongoSetting;
 import fr.vylaria.api.server.MongoServer;
+import fr.vylaria.api.server.ServerStatus;
+import fr.vylaria.api.utils.Utils;
 import fr.vylaria.hub.commands.manager.CommandManager;
 import fr.vylaria.hub.inventories.manager.InventoryManager;
 import fr.vylaria.hub.listeners.manager.ListenerManager;
 import fr.vylaria.hub.manager.HubManager;
-import fr.vylaria.hub.scoreboard.Scoreboard;
-import fr.vylaria.hub.scoreboard.ScoreboardManager;
+import fr.vylaria.hub.scoreboard.HubScoreboard;
+import fr.vylaria.hub.server.manager.ServerManager;
 import fr.vylaria.hub.world.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.rmi.ServerError;
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -26,13 +29,13 @@ public class VylariaHub extends JavaPlugin
 
     private ScheduledExecutorService executorMonoThread;
     private ScheduledExecutorService scheduledExecutorService;
-    private ScoreboardManager scoreboardManager;
 
     private HubManager hubManager;
     private WorldManager worldManager;
     private ListenerManager listenerManager;
     private CommandManager commandManager;
     private InventoryManager inventoryManager;
+    private ServerManager serverManager;
 
     private MongoConnection mongoConnection;
 
@@ -40,7 +43,7 @@ public class VylariaHub extends JavaPlugin
     private MongoSetting mongoSetting;
     private MongoServer mongoServer;
 
-    private Scoreboard scoreboard;
+    private HubScoreboard hubScoreboard;
 
     @Override
     public void onEnable()
@@ -56,21 +59,33 @@ public class VylariaHub extends JavaPlugin
 
         executorMonoThread = Executors.newScheduledThreadPool(16);
         scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scoreboardManager = new ScoreboardManager();
 
         hubManager = new HubManager();
         worldManager = new WorldManager(this);
         listenerManager = new ListenerManager(this);
         commandManager = new CommandManager(this);
         inventoryManager = new InventoryManager(this);
+        serverManager = new ServerManager();
 
         worldManager.register();
         listenerManager.register();
         commandManager.register();
         inventoryManager.register();
 
-        scoreboard = new Scoreboard();
-        scoreboard.register();
+        hubScoreboard = new HubScoreboard();
+        hubScoreboard.register();
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+            try {
+                VylariaAPI.getInstance().getSocketClient().sendMessage("changeStatus-"+VylariaAPI.getInstance().getVServer().getServerName()+"-STARTED");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Bukkit.getConsoleSender().sendMessage("§eChangement du statut!");
+        }, 20*10);
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> getServerManager().updateServers(), 20 * 5L, 20L);
+
 
     }
 
@@ -78,8 +93,6 @@ public class VylariaHub extends JavaPlugin
     public void onDisable()
     {
         instance = null;
-
-        scoreboardManager.onDisable();
 
         worldManager.getLootbox().remove();
     }
@@ -102,11 +115,6 @@ public class VylariaHub extends JavaPlugin
         return mongoSetting;
     }
 
-    public Scoreboard getScoreboard()
-    {
-        return scoreboard;
-    }
-
     public ScheduledExecutorService getExecutorMonoThread()
     {
         return executorMonoThread;
@@ -115,11 +123,6 @@ public class VylariaHub extends JavaPlugin
     public ScheduledExecutorService getScheduledExecutorService()
     {
         return scheduledExecutorService;
-    }
-
-    public ScoreboardManager getScoreboardManager()
-    {
-        return scoreboardManager;
     }
 
     public HubManager getHubManager()
@@ -139,5 +142,13 @@ public class VylariaHub extends JavaPlugin
 
     public MongoServer getMongoServer() {
         return mongoServer;
+    }
+
+    public HubScoreboard getHubScoreboard() {
+        return hubScoreboard;
+    }
+
+    public ServerManager getServerManager() {
+        return serverManager;
     }
 }

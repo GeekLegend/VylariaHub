@@ -1,12 +1,13 @@
 package fr.vylaria.hub.scoreboard;
 
+import fr.vylaria.api.interfaces.IManager;
+import fr.vylaria.api.player.account.Account;
+import fr.vylaria.api.player.account.MongoAccount;
+import fr.vylaria.api.player.account.Rank;
+import fr.vylaria.api.scoreboard.ScoreboardTeam;
+import fr.vylaria.api.scoreboard.manager.ScoreboardManager;
 import fr.vylaria.api.utils.Constants;
 import fr.vylaria.hub.VylariaHub;
-import fr.vylaria.api.player.account.Account;
-import fr.vylaria.api.player.account.Rank;
-import fr.vylaria.api.player.account.MongoAccount;
-import fr.vylaria.api.interfaces.IManager;
-import fr.vylaria.hub.manager.HubManager;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -14,19 +15,33 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Scoreboard implements IManager
-{
+public class HubScoreboard extends ScoreboardManager implements IManager {
 
     private List<ScoreboardTeam> teams;
+    private int ipLine = 2;
 
-    public Scoreboard()
-    {
-        this.teams = new ArrayList<ScoreboardTeam>();
+    public HubScoreboard() {
+        super("§e§lVYLARIA", "play.vylaria.eu");
+
+        this.teams = new ArrayList<>();
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(VylariaHub.getInstance(), () -> {
+            this.updateIp(ipLine);
+        }, 20L, 3);
+    }
+
+    public void onJoin(Player p){
+        this.addPlayer(p);
+        this.createTablist(p);
+    }
+
+    public void onLeave(Player p){
+        this.removePlayer(p);
     }
 
     public void createTablist(Player player)
     {
-        for (ScoreboardTeam team : VylariaHub.getInstance().getScoreboard().getTeams())
+        for (ScoreboardTeam team : VylariaHub.getInstance().getHubScoreboard().getTeams())
         {
             ((CraftPlayer) VylariaHub.getInstance().getServer().getPlayer(player.getUniqueId())).getHandle().playerConnection.sendPacket(team.createTeam());
         }
@@ -228,4 +243,5 @@ public class Scoreboard implements IManager
         teams.add(new ScoreboardTeam("014", Rank.PLAYER.getColor() + Rank.PLAYER.getPrefix(), ""));
         teams.add(new ScoreboardTeam("014S", Rank.PLAYER.getColor() + Rank.PLAYER.getPrefix(), " " + suffix));
     }
+
 }

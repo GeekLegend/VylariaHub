@@ -17,8 +17,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class HubListInventory extends AbstractInventory implements Listener {
@@ -31,9 +29,6 @@ public class HubListInventory extends AbstractInventory implements Listener {
     @Override
     public Inventory create(Player player)
     {
-
-        List<Server> servers = VylariaAPI.getInstance().getServerManager().getServers().get(ServerType.HUB);
-        int slot = 10;
 
         inventory.setItem(0, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((byte) 1).setName(" ").toItemStack());
         inventory.setItem(1, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((byte) 1).setName(" ").toItemStack());
@@ -62,12 +57,7 @@ public class HubListInventory extends AbstractInventory implements Listener {
         inventory.setItem(52, new ItemBuilder(Material.STAINED_GLASS_PANE).setDurability((byte) 1).setName(" ").toItemStack());
         inventory.setItem(size - 1, new ItemBuilder(Material.ARROW).setName("§6Retour").toItemStack());
 
-        for (Server s : servers){
-            while (inventory.getItem(slot) != null){
-                slot++;
-            }
-            inventory.setItem(slot, new ItemBuilder(Material.WOOL).setDurability(s.getServerStatus().getColor()).setName("§aHub " + s.getServerName()).toItemStack());
-        }
+        serversToItems(inventory, player);
 
         return inventory;
     }
@@ -114,38 +104,60 @@ public class HubListInventory extends AbstractInventory implements Listener {
             InventoryView inventoryView = players.getOpenInventory();
             if (inventoryView.getTitle().equalsIgnoreCase(name))
             {
-                /*redisServer = VylariaHub.getInstance().getRedisServer();
-                uhcRun1Server = redisServer.get("UHCRun1");
                 Inventory contents = inventoryView.getTopInventory();
-                byte statusData = 0;
 
-                switch (uhcRun1Server.getServerStatus())
-                {
-                    case WAITING:
-                        statusData = 5;
-                        break;
-                    case IN_GAME:
-                    case FINISH:
-                    case RESTART:
-                    case NO_STATUS:
-                        statusData = 14;
-                        break;
-                    default:
-                        break;
+                for (ItemStack item : contents.getContents()){
+                    if (item != null){
+                        if (item.getType() != Material.STAINED_GLASS_PANE){
+                            contents.remove(item);
+                        }
+                    }
                 }
 
-                switch (type)
-                {
-                    case 1:
-                        contents.setItem(10, new ItemBuilder(Material.STAINED_CLAY).setDurability(statusData).setName("§6UHC Run #1")
-                                .setLore(Arrays.asList(" ", "§7État §8» " + uhcRun1Server.getServerStatus().getNameColor() + uhcRun1Server.getServerStatus().getName(), "§7Mode §8» §6Solo", " ", "§7Joueurs en jeu §8» §a§l" + uhcRun1Server.getOnline(), " ", "§eClic-gauche §8» §eRejoindre"))
-                                .toItemStack());
-                        break;
-                    default:
-                        break;
-                }*/
+                serversToItems(contents, players);
+
             }
         }
+    }
+
+    public void serversToItems(Inventory inv, Player player){
+        int slot = 10;
+        List<Server> servers = VylariaHub.getInstance().getServerManager().getServers().get(ServerType.HUB);
+
+        for (Server s : servers){
+            while (inv.getItem(slot) != null){
+                slot++;
+            }
+
+            int percent = (s.getPlayerNamesList().size())/(s.getServerSlots())*100;
+            String populationType = "";
+            String populationColor = "";
+            if (percent < 25){
+                populationColor = "§a";
+                populationType = "Faible";
+            }else if (percent >= 25 && percent < 50){
+                populationColor = "§e";
+                populationType = "Moyenne";
+            }else if (percent >= 50 && percent < 75){
+                populationColor = "§c";
+                populationType = "Elevée";
+            }else if (percent >= 75){
+                populationColor = "§4";
+                populationType = "Très élevée";
+            }
+
+            String joinMessage = "§e» Cliquez pour vous connecter à ce Hub";
+            if (s.getPlayerNamesList().contains(player.getDisplayName())){
+                joinMessage = "§cVous êtes déjà connecté à ce Hub";
+            }
+
+            inv.setItem(slot, new ItemBuilder(Material.WOOL)
+                    .setDurability(s.getServerStatus().getColor())
+                    .setName("§aHub §6" + s.getServerName())
+                    .setLore("§7Population du hub ("+populationColor+populationType+"§7) : "+populationColor+s.getPlayerNamesList().size(), "", joinMessage)
+                    .toItemStack());
+        }
+
     }
 
 }

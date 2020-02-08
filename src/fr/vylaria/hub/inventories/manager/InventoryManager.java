@@ -1,5 +1,6 @@
 package fr.vylaria.hub.inventories.manager;
 
+import fr.vylaria.api.VylariaAPI;
 import fr.vylaria.hub.VylariaHub;
 import fr.vylaria.hub.inventories.*;
 import fr.vylaria.api.interfaces.IManager;

@@ -32,9 +32,8 @@ public class PlayerJoinListener implements Listener
         Account account = mongoAccount.get(player.getUniqueId());
         Rank rank = account.getRank();
 
-        VylariaHub.getInstance().getScoreboardManager().onLogin(player);
-
         lootbox.spawnHologram(player);
+        VylariaHub.getInstance().getHubScoreboard().onJoin(player);
 
         if (!rank.equals(Rank.PLAYER))
         {
@@ -89,6 +88,6 @@ public class PlayerJoinListener implements Listener
         player.getInventory().setItem(0, new ItemBuilder(Material.COMPASS).setName("§6Menu principal §7§o(Clic droit)").toItemStack());
         player.getInventory().setItem(1, new ItemBuilder(Material.SKULL_ITEM).setDurability((byte) 3).setSkullOwner(player.getName()).setName("§6Mon profil §7§o(Clic droit)").toItemStack());
         player.getInventory().setItem(7, new ItemBuilder(Material.GOLD_INGOT).setName("§6Boutique §7§o(Clic droit)").toItemStack());
-        player.getInventory().setItem(8, new ItemBuilder(Material.WOOL).setName("§aHubs §7§o(Clic droit)").toItemStack());
+        player.getInventory().setItem(8, new ItemBuilder(Material.NETHER_STAR).setGlowing().setName("§6Hubs §7§o(Clic droit)").toItemStack());
     }
 }
